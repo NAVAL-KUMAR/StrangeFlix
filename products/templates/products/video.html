@@ -1,4 +1,4 @@
-{% extends "parent.html" %}
+{% extends "products/parent.html" %}
 
 {% block title %}
 Video -
@@ -10,11 +10,14 @@ Video -
   <div class="row">
     <div style="margin-top:10px;" class="form-group col-md-9">
         <div class="row" style="margin-left: 5px;margin-right: 5px; ">
-      <video autoplay controls style="width:100%; height:auto;" >
-          {% load static %}
+      <video autoplay controls style="width:100%; height:auto;"  preload="metadata">
+
+
+             {% load static %}
           <source  src="{% static video.path %}" type="video/mp4">
             Your browser does not support the video tag.
         </video>
+
 
         <h4 style="margin-top: 7px;margin-left: 15px; ">{{ video.title }}</h4><br>
 

@@ -32,8 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'products.apps.ProductsConfig',
-    'accounts.apps.AccountsConfig',
+
+     'products.apps.ProductsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    
+
 
 
     #allauth
@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     #providers
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google'
+
 
 ]
 
