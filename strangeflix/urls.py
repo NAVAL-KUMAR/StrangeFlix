@@ -1,5 +1,5 @@
 
-from products.views import HomeView, NewVideo, CommentView, VideoView
+from products.views import HomeView, NewVideo, VideoView
 from django.contrib import admin
 from django.urls import path
 from products import views
@@ -10,7 +10,10 @@ urlpatterns = [
     path('', HomeView.as_view()),
     path('new_video', NewVideo.as_view()),
     path('video/<int:id>', VideoView.as_view()),
-    path('comment', CommentView.as_view()),
+    path('comment',views.comment),
+    path('comment_list',views.comment_list),
+    path('liked', views.liked),
+    path('disliked', views.disliked),
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('signup/', views.signup, name='signup'),
