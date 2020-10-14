@@ -1,9 +1,8 @@
 from django.views.generic.base import View, HttpResponseRedirect, HttpResponse
-from .forms import  NewVideoForm, CommentForm
 from .models import Video, Comment
 from django.core.files.storage import FileSystemStorage
 import os
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.views.generic import View
@@ -18,6 +17,7 @@ from django.contrib.auth import login, authenticate
 from django.http import HttpResponse
 from django.conf import settings
 import threading
+
 
 
 def home(request):
@@ -124,7 +124,7 @@ def logout(request):
 class HomeView(View):
     template_name = 'products/index.html'
     def get(self, request):
-        most_recent_videos = Video.objects.order_by('-datetime')[:15]
+        most_recent_videos = Video.objects.order_by('-upload_date')
         return render(request, self.template_name, {'menu_active_item': 'home', 'most_recent_videos': most_recent_videos})
 
 
@@ -137,21 +137,13 @@ class VideoView(View):
 
     def get(self, request, id):
         #fetch video from DB by ID
-        video_by_id = Video.objects.get(id=id)
-        #BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        video_by_id.path = video_by_id.path
-        context = {'video':video_by_id}
-
-        if request.user.is_authenticated:
-            print('user signed in')
-            comment_form = CommentForm()
-            context['form'] = comment_form
-
+        video_by_id = get_object_or_404(Video,pk=id)
+        
+        context = {'video_by_id':video_by_id}
 
         comments = Comment.objects.filter(video__id=id).order_by('-datetime')[:5]
-        print(comments)
         context['comments'] = comments
-        most_recent_videos = Video.objects.order_by('-datetime')[:8]
+        most_recent_videos = Video.objects.order_by('-upload_date')[:8]
         context['most_recent_videos'] = most_recent_videos
         return render(request, self.template_name, context)
 
@@ -181,12 +173,7 @@ class NewVideo(View):
     template_name = 'products/new_video.html'
 
     def get(self, request):
-        if request.user.is_authenticated == False:
-            #return HttpResponse('You have to be logged in, in order to upload a video.')
-            return HttpResponseRedirect('/register')
-
-        form = NewVideoForm()
-        return render(request, self.template_name, {'form':form})
+        return render(request, self.template_name)
 
     def post(self, request):
         # pass filled out HTML-Form from View to NewVideoForm()

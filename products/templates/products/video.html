@@ -10,18 +10,15 @@ Video -
   <div class="row">
     <div style="margin-top:10px;" class="form-group col-md-9">
         <div class="row" style="margin-left: 5px;margin-right: 5px; ">
-      <video autoplay controls style="width:100%; height:auto;"  preload="metadata">
+      <video class="bd-placeholder-img card-img-top" width="400" height="350" 
+                 controls poster="{{video_by_id.thumbtail.url}}"> 
+             <source src= "{{video_by_id.filename.url}}" type="video/mp4"> 
+              </video>
 
 
-             {% load static %}
-          <source  src="{% static video.path %}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
+        <h4 style="margin-top: 7px;margin-left: 15px; ">{{ video_by_id.title }}</h4><br>
 
-
-        <h4 style="margin-top: 7px;margin-left: 15px; ">{{ video.title }}</h4><br>
-
-      <p style="margin-top: 7px;margin-left: 15px; ">Description  : {{ video.description }}</p>
+      <p style="margin-top: 7px;margin-left: 15px; ">Description  : {{ video_by_id.description }}</p>
       <br>
         </div>
         <div class="row">
@@ -31,17 +28,6 @@ Video -
   <div class="row">
 
 
-{% if form %}
-      <div class="container">
-<form class="forms-group" action="/comment" method="POST">
-
-    {% csrf_token %}
-    {{ form }}
-    <input type='hidden' name='video' value='{{ video.id }}'>
-    <button type="submit" class="btn btn-primary">Post</button>
-</form> <br>
-          </div>
-{% endif %}
 
       <form>
   <div class="row">
@@ -66,11 +52,10 @@ Video -
         <div class="form-group col-md-3">
              {% for video in most_recent_videos %}
             <div style="margin-top:10px;" class="row">
-            {% load static %}
             <a href='/video/{{ video.id }}'>
-            <img style="width:100%; height:225px;" src="{% static video.imName %}" alt="My image" class="img-thumbnail"></a>
+            <img style="width:100%; height:225px;" src="{{video.thumbtail.url}}" alt="My image" class="img-thumbnail"></a>
             <h6 style="margin-top: 7px;margin-left: 15px; ">{{ video.title }}</h6>
-              <small style="margin-top: 0px;margin-left: 16px;" class="text-muted">Uploaded by {{ video.user }} on {{ video.datetime }}</small>
+              
             </div>
 
               {% endfor %}

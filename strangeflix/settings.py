@@ -136,6 +136,14 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS=[
+os.path.join(BASE_DIR,'strange/static/')
+]
+
+MEDIA_URL='/media/'
+STATIC_ROOT=os.path.join(BASE_DIR,'static')
+
+MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST='smtp.gmail.com'
