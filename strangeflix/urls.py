@@ -1,5 +1,5 @@
 
-from products.views import HomeView, NewVideo, CommentView, VideoView
+from products.views import HomeView, CommentView, VideoView
 from django.contrib import admin
 from django.urls import path
 from products import views
@@ -10,7 +10,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('', HomeView.as_view()),
-    path('new_video', NewVideo.as_view()),
+    path('new_video', views.new_video,name='new_video'),
     path('video/<int:id>', VideoView.as_view()),
     path('comment', CommentView.as_view()),
     path('admin/', admin.site.urls),
@@ -32,4 +32,7 @@ urlpatterns = [
          auth_views.PasswordResetCompleteView.as_view(template_name="products/password_reset_done.html"),
          name='password_reset_complete'),
 
-]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+]
+
+if settings.DEBUG:
+    urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
