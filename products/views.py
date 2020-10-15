@@ -17,6 +17,8 @@ from django.contrib.auth import login, authenticate
 from django.http import HttpResponse
 from django.conf import settings
 import threading
+from django.utils import timezone
+from django.core.files.storage import FileSystemStorage
 
 
 
@@ -169,44 +171,39 @@ class CommentView(View):
 
 #view to upload video
 
-class NewVideo(View):
-    template_name = 'products/new_video.html'
+def new_video(request):
+    if request.method=='POST':
+        bvl=False
+        video=Video()
+        video.title =request.POST.get('video_title')
+        video.description =request.POST.get('video_description')
+        play=request.FILES.get('video_filename')
+        img=request.FILES.get('video_thumbtail')
+        video.type=request.POST.get('video_type')
+        url=request.POST.get('video_link')
+        if request.POST.get('video_type')!='upload from system' and len(url)==0:
+            bvl=True
+            messages.add_message(request,messages.ERROR,'url field cannot be empty')
+        if request.POST.get('video_type')=='upload from system' and play==None:
+            bvl=True
+            messages.add_message(request,messages.ERROR,'filename cannot be empty')
+        if img==None:
+            bvl=True
+            messages.add_message(request,messages.ERROR,'add a valid thumbtail')
+        if bvl:
+            return redirect('new_video')
 
-    def get(self, request):
-        return render(request, self.template_name)
-
-    def post(self, request):
-        # pass filled out HTML-Form from View to NewVideoForm()
-        form = NewVideoForm(request.POST, request.FILES)
-
-        if form.is_valid():
-            # create a new Video Entry
-            title = form.cleaned_data['title']
-            description = form.cleaned_data['description']
-            file = form.cleaned_data['file']
-            fileI = form.cleaned_data['fileI']
-            #random_char = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
-            path = 'products/static/'+file.name
-            pathI = 'products/static/'+fileI.name
-
-            fs = FileSystemStorage(location = os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-            fileIname = fs.save(pathI,fileI)
-            filename = fs.save(path, file)
-            file_url = fs.url(filename)
-
-            print(fs)
-            print(filename)
-            print(file_url)
-            print(path)
-            print(fileIname)
-
-            new_video = Video(title=title,
-                            description=description,
-                            user=request.user,
-                            path=file.name,imName=fileI.name)
-            new_video.save()
-
-            # redirect to detail view template of a Video
-            return HttpResponseRedirect('video/{}'.format(new_video.id))
+        video.category=request.POST.get('video_category')
+        video.filename=play
+        video.thumbtail=img
+        video.link=request.POST.get('video_link')
+        video.subtitle=request.POST.get('video_subtitle')
+        if request.POST.get('video_premium'):
+            video.premium=True
         else:
-            return HttpResponse('Your form is not valid. Go back and try again.')
+            video.premium=False
+        video.upload_date=timezone.datetime.now()
+        video.save()
+        return HttpResponseRedirect('video/{}'.format(str(video.id)))
+
+    return render(request,'products/new_video.html')

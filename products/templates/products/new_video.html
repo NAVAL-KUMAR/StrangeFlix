@@ -2,9 +2,85 @@
 
 {% block title %}
 Upload Video
+
 {% endblock %}
 
-{% block body %}
 
+
+{% block body %}
+{% if messages %}
+
+    {% for message in messages %}
+     <h2 style="color: green;">  {{ message }}</h2>
+    {% endfor %}
+
+{% endif %}
+  <div style="padding: 5px 10px;color: black;">
+  <h1 style=" color: rgb(0,100,0);width: 20%">Upload Viedo</h1>
+
+  <form method="POST" action="{% url 'new_video' %}" enctype="multipart/form-data">
+  	
+{% csrf_token %}
+
+<input placeholder="text" type="text" name="video_title">
+<br>
+<br>
+<textarea style="width: 500px;height: 100px" placeholder="description" type="textbox" name="video_description" ></textarea>
+<br>
+<br>
+<select  name="video_type" style="cursor: pointer;padding: 8px 12px;color: #333333;border-radius: 5px;color: aqua">
+	<option disabled selected>video type</option>
+	<option>Youtube link</option>
+   <option>upload from system</option>
+   <option>amazon S3 bucket</option>
+   <option>other links</option>
+ 
+</select>
+<br>
+<br>
+
+
+<select  name="video_category" style="cursor: pointer;padding: 8px 12px;color: #333333;border-radius: 5px;color: aqua">
+	<option disabled selected>video category</option>
+	<option>song</option>
+   <option>movie</option>
+   <option>trailer</option>
+   <option>cartoon</option>
+   <option>others</option>
+
+</select>
+<br>
+ <br>
+<label for="f01">viedo: </label>
+ <input  id="f01" type="file" name="video_filename">
+
+ <br>
+  <br>
+<label for="f02">Image: </label>
+ <input id="f02" value="thumbnails" type="file" name="video_thumbtail">
+ <br>
+  <br>
+ <input placeholder="url" type="url" name="video_link">
+ <br>
+  <br>
+ <input placeholder="subtitle" type="text" name="video_subtitle">
+ <br>
+  <br>
+
+<label class="container">
+ <span class="checkmark">premium :</span>
+  <input type="checkbox" name="video_premium"> 
+  
+</label>
+ 
+ <br>
+ <br>
+ <input value="submit" type="submit" style="width: 100px" name="video_submit">
+ <br>
+ <br>
+
+
+  </form>
+  </div>
 
 {% endblock %}
